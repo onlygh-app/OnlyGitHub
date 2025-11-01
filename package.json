@@ -30,15 +30,21 @@
     "@electron/fuses": "^2.0.0",
     "@types/electron": "^1.6.12",
     "@types/node": "^24.9.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "css-loader": "^6.0.0",
     "electron": "^39.0.0",
     "node-loader": "^2.0.0",
+    "sass": "^1.93.3",
+    "sass-loader": "^16.0.6",
     "style-loader": "^3.0.0",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1"
+    "electron-squirrel-startup": "^1.0.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   }
 }

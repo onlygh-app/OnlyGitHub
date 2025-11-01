@@ -6,11 +6,20 @@ rules.push({
 });
 
 module.exports = {
+  target: 'web',
   // Put your normal webpack config below here
   module: {
     rules,
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+    fallback: {
+      events: false,
+      util: false,
+      stream: false,
+      assert: false,
+      buffer: false,
+      path: false
+    }
   },
 };
