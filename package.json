@@ -9,6 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
+    "build": "tsc",
     "lint": "echo \"No linting configured\""
   },
   "keywords": [],
@@ -16,5 +17,19 @@
     "name": "HelloAIXIAOJI",
     "email": "aixiaoji2020@163.com"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@electron-forge/plugin-webpack": "^7.10.2",
+    "@types/electron": "^1.6.12",
+    "@types/node": "^24.9.2",
+    "@vercel/webpack-asset-relocator-loader": "1.7.3",
+    "css-loader": "^6.0.0",
+    "node-loader": "^2.0.0",
+    "style-loader": "^3.0.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1"
+  }
 }

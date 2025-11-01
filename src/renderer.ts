@@ -11,7 +11,7 @@
  *
  * https://electronjs.org/docs/tutorial/security
  *
- * To enable Node.js integration in this file, open up `main.js` and enable the `nodeIntegration`
+ * To enable Node.js integration in this file, open up `main.ts` and enable the `nodeIntegration`
  * flag:
  *
  * ```
@@ -29,5 +29,5 @@
 import './index.css';
 
 console.log(
-  '👋 This message is being logged by "renderer.js", included via webpack',
+  '👋 This message is being logged by "renderer.ts", included via webpack',
 );

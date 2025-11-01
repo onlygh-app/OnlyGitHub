@@ -90,3 +90,18 @@ typings/
 
 # Electron-Forge
 out/
+
+# Build output
+dist/
+out/
+.webpack/
+# Dependencies
+node_modules/
+yarn.lock
+package-lock.json
+# IDE
+.*
+electron-logs/
+
+.DS_Store
+Thumbs.db
