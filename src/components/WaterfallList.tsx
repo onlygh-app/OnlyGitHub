@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { memo, useEffect, useRef, useCallback, useMemo, useState } from 'react';
 import { Repository } from '../types';
 import { RepositoryItem } from './RepositoryItem';
 
@@ -9,8 +9,6 @@ interface WaterfallListProps {
   onLoadMore: () => void;
 }
 
-const COLUMN_COUNT = 5;
-
 const WaterfallListComponent: React.FC<WaterfallListProps> = ({
   repositories,
   loading,
@@ -18,6 +16,7 @@ const WaterfallListComponent: React.FC<WaterfallListProps> = ({
   onLoadMore,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
+  const [columnCount, setColumnCount] = useState(5);
 
   const handleScroll = useCallback(() => {
     if (!contentRef.current || loading) return;
@@ -37,14 +36,33 @@ const WaterfallListComponent: React.FC<WaterfallListProps> = ({
     return undefined;
   }, [handleScroll]);
 
+  // 监听窗口大小变化，计算列数
+  useEffect(() => {
+    const calculateColumns = () => {
+      if (contentRef.current) {
+        const width = contentRef.current.offsetWidth - 32; // 减去padding
+        const cols = Math.max(1, Math.floor(width / 340)); // 340px是最小宽度 + gap
+        setColumnCount(cols);
+      }
+    };
+
+    calculateColumns();
+    const resizeObserver = new ResizeObserver(calculateColumns);
+    if (contentRef.current) {
+      resizeObserver.observe(contentRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, []);
+
   // 将仓库分组到列中
   const columns = useMemo(() => {
-    const cols: Repository[][] = Array.from({ length: COLUMN_COUNT }, () => []);
+    const cols: Repository[][] = Array.from({ length: columnCount }, () => []);
     repositories.forEach((repo, index) => {
-      cols[index % COLUMN_COUNT].push(repo);
+      cols[index % columnCount].push(repo);
     });
     return cols;
-  }, [repositories]);
+  }, [repositories, columnCount]);
 
   return (
     <div className="content waterfall-container" ref={contentRef}>
@@ -59,7 +77,7 @@ const WaterfallListComponent: React.FC<WaterfallListProps> = ({
           <div key={colIndex} className="waterfall-column">
             {column.map((repo, itemIndex) => (
               <div key={repo.id} className="waterfall-item">
-                <RepositoryItem repo={repo} index={colIndex * COLUMN_COUNT + itemIndex} />
+                <RepositoryItem repo={repo} index={colIndex * columnCount + itemIndex} />
               </div>
             ))}
           </div>

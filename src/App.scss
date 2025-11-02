@@ -470,11 +470,11 @@ body {
 
       .repo-item {
         display: flex;
-        align-items: stretch;
-        padding: 20px 32px;
+        align-items: center;
+        padding: 16px 24px;
         border-bottom: 1px solid var(--color-border);
         transition: all var(--transition-fast);
-        gap: 20px;
+        gap: 16px;
 
         &:hover {
           background: rgba(88, 166, 255, 0.05);
@@ -489,12 +489,12 @@ body {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 48px;
-          height: 48px;
+          width: 40px;
+          height: 40px;
           flex-shrink: 0;
           border-radius: 50%;
           overflow: hidden;
-          border: 2px solid rgba(88, 166, 255, 0.2);
+          border: 1px solid rgba(88, 166, 255, 0.2);
           transition: all var(--transition-base);
           background: var(--color-bg-tertiary);
 
@@ -506,7 +506,7 @@ body {
 
           &:hover {
             border-color: var(--color-accent-blue);
-            box-shadow: 0 0 16px rgba(88, 166, 255, 0.3);
+            box-shadow: 0 0 12px rgba(88, 166, 255, 0.3);
             transform: scale(1.08);
           }
         }
@@ -516,10 +516,10 @@ body {
           min-width: 0;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 4px;
 
           .repo-name {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--color-accent-green);
             text-decoration: none;
@@ -533,20 +533,23 @@ body {
           }
 
           .repo-full-name {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--color-text-secondary);
             font-family: var(--font-mono);
             background: rgba(88, 166, 255, 0.08);
-            padding: 4px 8px;
+            padding: 2px 6px;
             border-radius: var(--radius-sm);
             width: fit-content;
-            letter-spacing: 0.2px;
+            letter-spacing: 0.1px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
 
           .repo-description {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--color-text-secondary);
-            line-height: 1.6;
+            line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -557,49 +560,50 @@ body {
 
         .repo-meta {
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
           gap: 8px;
-          justify-content: center;
-          align-items: flex-end;
+          justify-content: flex-end;
+          align-items: center;
           flex-shrink: 0;
-          min-width: 120px;
 
           .repo-rank {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--color-accent-purple);
             font-weight: 700;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             background: rgba(210, 168, 255, 0.1);
-            padding: 4px 8px;
+            padding: 2px 6px;
             border-radius: var(--radius-sm);
             border: 1px solid rgba(210, 168, 255, 0.15);
+            white-space: nowrap;
           }
 
           .repo-language {
-            font-size: 12px;
+            font-size: 11px;
             background: rgba(251, 133, 0, 0.1);
             color: var(--color-accent-orange);
-            padding: 4px 10px;
+            padding: 2px 6px;
             border-radius: var(--radius-sm);
             font-weight: 600;
             border: 1px solid rgba(251, 133, 0, 0.15);
-            letter-spacing: 0.2px;
+            letter-spacing: 0.1px;
             text-align: center;
             white-space: nowrap;
           }
 
           .repo-stars {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--color-accent-orange);
             font-weight: 700;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
+            white-space: nowrap;
 
             &::before {
               content: '★';
-              font-size: 14px;
+              font-size: 13px;
               display: inline-block;
             }
           }
@@ -618,7 +622,7 @@ body {
 
     .waterfall-columns {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
       gap: 16px;
       width: 100%;
       align-items: start;
