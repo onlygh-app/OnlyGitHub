@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 
 interface LoginCardProps {
   token: string;
   error: string;
   onTokenChange: (value: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-export const LoginCard: React.FC<LoginCardProps> = ({
+const LoginCardComponent: React.FC<LoginCardProps> = ({
   token,
   error,
   onTokenChange,
   onSubmit,
 }) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    onTokenChange(e.target.value);
+  }, [onTokenChange]);
+
   return (
     <div className="login-container">
       <div className="login-card">
@@ -23,8 +27,10 @@ export const LoginCard: React.FC<LoginCardProps> = ({
             type="password"
             placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             value={token}
-            onChange={(e) => onTokenChange(e.target.value)}
+            onChange={handleInputChange}
             className="token-input"
+            autoFocus
+            autoComplete="off"
           />
           <button type="submit" className="submit-btn">
             Login
@@ -41,3 +47,5 @@ export const LoginCard: React.FC<LoginCardProps> = ({
     </div>
   );
 };
+
+export const LoginCard = memo(LoginCardComponent);

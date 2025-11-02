@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, memo, useCallback } from 'react';
 import { PageType } from '../types';
 
 interface SidebarProps {
@@ -6,7 +6,6 @@ interface SidebarProps {
   position: 'left' | 'right';
   currentPage: PageType;
   pageTitle: string;
-  pageSubtitle: string;
   isResizing: boolean;
   onMouseDown: () => void;
   onPageChange: (page: PageType) => void;
@@ -14,12 +13,11 @@ interface SidebarProps {
   onLogout: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({
+const SidebarComponent: React.FC<SidebarProps> = ({
   width,
   position,
   currentPage,
   pageTitle,
-  pageSubtitle,
   isResizing,
   onMouseDown,
   onPageChange,
@@ -27,6 +25,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onLogout,
 }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
+
+  const handleNavClick = useCallback((page: PageType) => {
+    onPageChange(page);
+  }, [onPageChange]);
 
   return (
     <>
@@ -39,21 +41,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="sidebar-title">
             <h1>OnlyGitHub</h1>
             <p className="current-page">{pageTitle}</p>
-            <p className="current-page-subtitle">{pageSubtitle}</p>
           </div>
         </div>
 
         <nav className="sidebar-nav">
           <button
             className={`nav-item ${currentPage === 'explore' ? 'active' : ''}`}
-            onClick={() => onPageChange('explore')}
+            onClick={() => handleNavClick('explore')}
+            title="Explore repositories"
           >
             <span className="nav-icon">E</span>
             <span className="nav-label">Explore</span>
           </button>
           <button
             className={`nav-item ${currentPage === 'trending' ? 'active' : ''}`}
-            onClick={() => onPageChange('trending')}
+            onClick={() => handleNavClick('trending')}
+            title="View trending repositories"
           >
             <span className="nav-icon">T</span>
             <span className="nav-label">Trending</span>
@@ -69,7 +72,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <span className="nav-icon">P</span>
             <span className="nav-label">Move</span>
           </button>
-          <button onClick={onLogout} className="logout-btn">
+          <button onClick={onLogout} className="logout-btn" title="Logout">
             <span className="nav-icon">L</span>
             <span className="nav-label">Logout</span>
           </button>
@@ -79,8 +82,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div
         className="resize-handle"
         onMouseDown={onMouseDown}
-        style={{ cursor: isResizing ? 'col-resize' : 'default' }}
+        style={{ cursor: isResizing ? 'col-resize' : 'pointer' }}
+        role="separator"
+        aria-label="Sidebar resize handle"
       />
     </>
   );
 };
+
+export const Sidebar = memo(SidebarComponent);

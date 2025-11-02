@@ -17,10 +17,17 @@ const transformRepoData = (repo: any): Repository => ({
 });
 
 export const setupGitHubIPCHandlers = (): void => {
-  ipcMain.handle('fetch-explore-repos', async (_event, token: string) => {
+  ipcMain.handle('fetch-explore-repos', async (_event, token: string, page: number = 1) => {
     try {
+      // 生成随机的stars范围，确保每次请求都不同
+      const randomStars = Math.floor(Math.random() * 5000) + 100;
+      const orders = ['asc', 'desc'];
+      const sorts = ['stars', 'updated', 'forks'];
+      const randomOrder = orders[Math.floor(Math.random() * orders.length)];
+      const randomSort = sorts[Math.floor(Math.random() * sorts.length)];
+
       const response = await fetch(
-        'https://api.github.com/search/repositories?q=stars:%3E1000&sort=stars&order=desc&per_page=10',
+        `https://api.github.com/search/repositories?q=stars:%3E${randomStars}&sort=${randomSort}&order=${randomOrder}&per_page=50&page=${page}`,
         {
           headers: {
             'Authorization': `token ${token}`,
@@ -41,10 +48,10 @@ export const setupGitHubIPCHandlers = (): void => {
     }
   });
 
-  ipcMain.handle('fetch-trending-repos', async (_event, token: string) => {
+  ipcMain.handle('fetch-trending-repos', async (_event, token: string, page: number = 1) => {
     try {
       const response = await fetch(
-        'https://api.github.com/search/repositories?q=stars:%3E500+created:%3E2025-10-01&sort=updated&order=desc&per_page=10',
+        `https://api.github.com/search/repositories?q=stars:%3E500+created:%3E2025-10-01&sort=updated&order=desc&per_page=15&page=${page}`,
         {
           headers: {
             'Authorization': `token ${token}`,

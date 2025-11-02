@@ -5,7 +5,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('electron', {
   github: {
-    fetchExploreRepos: (token: string) => ipcRenderer.invoke('fetch-explore-repos', token),
-    fetchTrendingRepos: (token: string) => ipcRenderer.invoke('fetch-trending-repos', token),
+    fetchExploreRepos: (token: string, page: number = 1) => ipcRenderer.invoke('fetch-explore-repos', token, page),
+    fetchTrendingRepos: (token: string, page: number = 1) => ipcRenderer.invoke('fetch-trending-repos', token, page),
   },
 });

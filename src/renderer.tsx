@@ -10,11 +10,15 @@ import { createRoot } from 'react-dom/client';
 import { App } from './App';
 
 const container = document.getElementById('app');
-if (container) {
-  const root = createRoot(container);
-  root.render(<App />);
+
+if (!container) {
+  throw new Error('Failed to find the root element');
 }
 
-console.log(
-  'OnlyGitHub React app is running',
-);
+try {
+  const root = createRoot(container);
+  root.render(<App />);
+  console.log('OnlyGitHub React app initialized successfully');
+} catch (error) {
+  console.error('Failed to render OnlyGitHub app:', error);
+}

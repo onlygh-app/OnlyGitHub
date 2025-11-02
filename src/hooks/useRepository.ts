@@ -8,14 +8,20 @@ export const useRepository = () => {
   const [currentPage, setCurrentPage] = useState<PageType>('explore');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [explorePage, setExplorePage] = useState<number>(1);
+  const [trendingPage, setTrendingPage] = useState<number>(1);
+  const [authToken, setAuthToken] = useState<string>('');
 
-  const fetchRepositories = useCallback(async (authToken: string) => {
+  const fetchRepositories = useCallback(async (token: string) => {
+    setAuthToken(token);
     setLoading(true);
     setError('');
+    setExplorePage(1);
+    setTrendingPage(1);
     try {
       const [exploreRepos, trendingRepos] = await Promise.all([
-        githubService.fetchExploreRepos(authToken),
-        githubService.fetchTrendingRepos(authToken),
+        githubService.fetchExploreRepos(token, 1),
+        githubService.fetchTrendingRepos(token, 1),
       ]);
       setExplore(exploreRepos);
       setTrending(trendingRepos);
@@ -26,10 +32,36 @@ export const useRepository = () => {
     }
   }, []);
 
+  const loadMore = useCallback(async () => {
+    if (loading || !authToken) return;
+
+    try {
+      setLoading(true);
+      if (currentPage === 'explore') {
+        const nextPage = explorePage + 1;
+        const moreRepos = await githubService.fetchExploreRepos(authToken, nextPage);
+        setExplore(prev => [...prev, ...moreRepos]);
+        setExplorePage(nextPage);
+      } else {
+        const nextPage = trendingPage + 1;
+        const moreRepos = await githubService.fetchTrendingRepos(authToken, nextPage);
+        setTrending(prev => [...prev, ...moreRepos]);
+        setTrendingPage(nextPage);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '加载失败');
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage, explorePage, trendingPage, authToken, loading]);
+
   const clearRepositories = useCallback(() => {
     setExplore([]);
     setTrending([]);
     setCurrentPage('explore');
+    setExplorePage(1);
+    setTrendingPage(1);
+    setAuthToken('');
   }, []);
 
   const getCurrentData = useCallback(() => {
@@ -54,5 +86,6 @@ export const useRepository = () => {
     clearRepositories,
     getCurrentData,
     getPageInfo,
+    loadMore,
   };
 };

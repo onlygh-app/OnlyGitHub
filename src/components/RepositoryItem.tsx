@@ -1,23 +1,15 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Repository } from '../types';
+import { LazyImage } from './LazyImage';
 
 interface RepositoryItemProps {
   repo: Repository;
   index: number;
 }
 
-export const RepositoryItem: React.FC<RepositoryItemProps> = ({ repo, index }) => {
+const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index }) => {
   return (
     <div className="repo-item">
-      <a
-        href={repo.owner.profile_url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="repo-avatar"
-        title={repo.owner.login}
-      >
-        <img src={repo.owner.avatar_url} alt={repo.owner.login} />
-      </a>
       <div className="repo-content">
         <a
           href={repo.url}
@@ -31,10 +23,23 @@ export const RepositoryItem: React.FC<RepositoryItemProps> = ({ repo, index }) =
         <p className="repo-description">{repo.description}</p>
       </div>
       <div className="repo-meta">
-        <span className="repo-rank">#{index + 1}</span>
-        <span className="repo-language">{repo.language}</span>
-        <span className="repo-stars">{repo.stars}</span>
+        <div className="meta-info">
+          <span className="repo-rank">#{index + 1}</span>
+          <span className="repo-language">{repo.language}</span>
+          <span className="repo-stars">{repo.stars}</span>
+        </div>
+        <a
+          href={repo.owner.profile_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="repo-avatar"
+          title={repo.owner.login}
+        >
+          <LazyImage src={repo.owner.avatar_url} alt={repo.owner.login} />
+        </a>
       </div>
     </div>
   );
 };
+
+export const RepositoryItem = memo(RepositoryItemComponent);

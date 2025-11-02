@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import './App.scss';
 import { LoginCard, Sidebar, MainContent } from './components';
 import { useAuth, useRepository, useSidebar } from './hooks';
@@ -17,19 +17,19 @@ export const App: React.FC = () => {
     if (auth.isAuthenticated && auth.tempToken) {
       repo.fetchRepositories(auth.tempToken);
     }
-  }, [auth.isAuthenticated]);
+  }, [auth.isAuthenticated, auth.tempToken]);
 
-  const handleTokenSubmit = (e: React.FormEvent) => {
+  const handleTokenSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (auth.login(auth.tempToken)) {
       repo.fetchRepositories(auth.tempToken);
     }
-  };
+  }, [auth, repo]);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     auth.logout();
     repo.clearRepositories();
-  };
+  }, [auth, repo]);
 
   if (!auth.isAuthenticated) {
     return (
@@ -52,7 +52,6 @@ export const App: React.FC = () => {
         position={sidebar.sidebarPosition}
         currentPage={repo.currentPage}
         pageTitle={pageInfo.title}
-        pageSubtitle={pageInfo.subtitle}
         isResizing={sidebar.isResizing}
         onMouseDown={sidebar.handleMouseDown}
         onPageChange={repo.setCurrentPage}
@@ -64,6 +63,8 @@ export const App: React.FC = () => {
         repositories={currentData}
         loading={repo.loading}
         error={repo.error}
+        onLoadMore={repo.loadMore}
+        currentPage={repo.currentPage}
       />
     </div>
   );
