@@ -16,5 +16,5 @@ if (container) {
 }
 
 console.log(
-  '👋 OnlyGitHub React app is running',
+  'OnlyGitHub React app is running',
 );
