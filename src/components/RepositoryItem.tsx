@@ -24,17 +24,22 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
   return (
     <Card
       sx={{
-        marginBottom: '10px',
+        marginBottom: theme.spacing(1.25),
         transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+        '&:hover': {
+          boxShadow: theme.shadows[2],
+        },
       }}
+      elevation={0}
     >
-      <CardContent sx={{ padding: '12px 14px', '&:last-child': { paddingBottom: '12px' } }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+      <CardContent sx={{ padding: theme.spacing(1.5), '&:last-child': { paddingBottom: theme.spacing(1.5) } }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: theme.spacing(1) }}>
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <Link
               href={repo.url}
               target="_blank"
               rel="noopener noreferrer"
+              underline="hover"
               sx={{
                 fontSize: '15px',
                 fontWeight: 600,
@@ -42,6 +47,7 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
+                color: theme.palette.primary.main,
               }}
             >
               {repo.name}
@@ -49,17 +55,16 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
 
             <Typography
               variant="caption"
+              component="div"
               sx={{
                 color: theme.palette.text.secondary,
-                marginTop: '2px',
-                display: 'block',
+                marginTop: theme.spacing(0.25),
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
-                fontFamily: '"SF Mono", "Segoe UI Mono", "Roboto Mono", "Monaco", "Courier New", monospace',
-                backgroundColor: 'rgba(88, 166, 255, 0.08)',
-                padding: '2px 6px',
-                borderRadius: '4px',
+                backgroundColor: theme.palette.action.hover,
+                padding: theme.spacing(0.25, 0.75),
+                borderRadius: theme.spacing(0.5),
                 width: 'fit-content',
               }}
             >
@@ -71,7 +76,7 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                 variant="caption"
                 sx={{
                   color: theme.palette.text.primary,
-                  marginTop: '4px',
+                  marginTop: theme.spacing(0.5),
                   lineHeight: 1.4,
                   display: '-webkit-box',
                   WebkitLineClamp: 2,
@@ -83,25 +88,25 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
               </Typography>
             )}
 
-            <Stack direction="row" spacing={0.5} sx={{ marginTop: '6px', flexWrap: 'wrap', gap: '4px' }}>
+            <Stack 
+              direction="row" 
+              spacing={0.5} 
+              sx={{ 
+                marginTop: theme.spacing(0.75), 
+                flexWrap: 'wrap', 
+                gap: theme.spacing(0.5),
+              }}
+            >
               <Chip
                 label={`#${index + 1}`}
                 size="small"
                 variant="outlined"
-                sx={{
-                  height: '20px',
-                  fontSize: '11px',
-                }}
               />
               {repo.language && (
                 <Chip
                   label={repo.language}
                   size="small"
                   variant="outlined"
-                  sx={{
-                    height: '20px',
-                    fontSize: '11px',
-                  }}
                 />
               )}
               <Chip
@@ -112,8 +117,6 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                 sx={{
                   borderColor: theme.palette.warning.main,
                   color: theme.palette.warning.main,
-                  height: '20px',
-                  fontSize: '11px',
                 }}
               />
             </Stack>
@@ -125,7 +128,7 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
             rel="noopener noreferrer"
             title={repo.owner.login}
             sx={{
-              marginLeft: '8px',
+              marginLeft: theme.spacing(1),
               display: 'flex',
               alignItems: 'center',
               borderRadius: '50%',

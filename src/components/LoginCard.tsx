@@ -1,15 +1,15 @@
 import React, { memo, useCallback } from 'react';
 import {
   Container,
-  Paper,
   TextField,
   Button,
   Box,
   Typography,
-  Link,
   Alert,
   IconButton,
   useTheme,
+  Grow,
+  Stack,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -41,65 +41,43 @@ const LoginCardComponent: React.FC<LoginCardProps> = ({
         justifyContent: 'center',
         minHeight: '100vh',
         backgroundColor: theme.palette.background.default,
-        padding: '20px',
-        background: `
-          linear-gradient(135deg, rgba(88, 166, 255, 0.03) 0%, transparent 50%),
-          linear-gradient(-135deg, rgba(210, 168, 255, 0.03) 0%, transparent 50%),
-          ${theme.palette.background.default}
-        `,
-        position: 'relative',
-        overflow: 'hidden',
-        '&::before': {
-          content: '""',
-          position: 'fixed',
-          inset: 0,
-          background: `
-            radial-gradient(circle at 20% 50%, rgba(88, 166, 255, 0.04) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(210, 168, 255, 0.04) 0%, transparent 50%)
-          `,
-          pointerEvents: 'none',
-          zIndex: 0,
-        },
+        padding: theme.spacing(2),
       }}
     >
-      <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1 }}>
-        <Paper
-          elevation={12}
-          sx={{
-            padding: '48px 40px',
-            borderRadius: '12px',
-            border: `1px solid ${theme.palette.divider}`,
-            backdropFilter: 'blur(10px)',
-            animation: 'slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-          }}
-        >
+      <Container maxWidth="xs">
+        <Grow in timeout={300}>
+          <Box>
+            <Stack spacing={6}>
+              <Box sx={{ textAlign: 'center' }}>
           <Typography
-            variant="h1"
+                  variant="h4"
             component="h1"
             sx={{
-              background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              textAlign: 'center',
-              marginBottom: '12px',
+                    fontWeight: 500,
+                    fontSize: '32px',
+                    letterSpacing: '-0.5px',
+                    marginBottom: theme.spacing(1),
+                    color: theme.palette.text.primary,
             }}
           >
             OnlyGitHub
           </Typography>
-
           <Typography
             variant="body1"
             sx={{
-              textAlign: 'center',
-              marginBottom: '32px',
+                    fontSize: '15px',
               color: theme.palette.text.secondary,
+                    fontWeight: 400,
+                    letterSpacing: '0px',
+                    lineHeight: 1.5,
             }}
           >
-            Enter your GitHub Personal Access Token
+                  Sign in with your GitHub token to get started
           </Typography>
+              </Box>
 
-          <Box component="form" onSubmit={onSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <Box component="form" onSubmit={onSubmit}>
+                <Stack spacing={3}>
             <TextField
               type="password"
               placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -109,22 +87,71 @@ const LoginCardComponent: React.FC<LoginCardProps> = ({
               variant="outlined"
               autoFocus
               autoComplete="off"
+                    label="GitHub Token"
+                    size="medium"
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: '8px',
+                        backgroundColor: 'transparent',
+                        transition: 'border-color 0.2s ease',
+                        '& fieldset': {
+                          borderColor: theme.palette.divider,
+                          borderWidth: '1px',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: theme.palette.text.secondary,
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: theme.palette.primary.main,
+                          borderWidth: '1px',
+                        },
+                      },
+                      '& .MuiInputBase-input': {
+                        fontSize: '15px',
+                        padding: '12px 14px',
+                        letterSpacing: '0px',
+                      },
+                      '& .MuiInputLabel-root': {
+                        fontSize: '15px',
+                        transform: 'translate(14px, -9px) scale(0.75)',
+                        '&.Mui-focused': {
+                          color: theme.palette.primary.main,
+                        },
+                      },
+                    }}
             />
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              size="large"
+                    disabled={!token.trim()}
               sx={{
-                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, #4184f3 100%)`,
-                marginTop: '8px',
+                      borderRadius: '8px',
+                      textTransform: 'none',
+                      fontSize: '15px',
+                      fontWeight: 500,
+                      padding: '10px 16px',
+                      height: '40px',
+                      backgroundColor: theme.palette.primary.main,
+                      color: 'white',
+                      transition: 'background-color 0.15s ease',
+                      '&:hover:not(:disabled)': {
+                        backgroundColor: theme.palette.primary.dark,
+                      },
+                      '&:disabled': {
+                        backgroundColor: theme.palette.action.disabledBackground,
+                        color: theme.palette.action.disabled,
+                      },
               }}
             >
-              Login
+                    Sign In
             </Button>
+                </Stack>
           </Box>
 
           {error && (
+                <Grow in timeout={200}>
             <Alert
               severity="error"
               action={
@@ -132,50 +159,58 @@ const LoginCardComponent: React.FC<LoginCardProps> = ({
                   size="small"
                   color="inherit"
                   onClick={onErrorClear}
+                        sx={{ marginRight: '-8px' }}
                 >
                   <CloseIcon fontSize="small" />
                 </IconButton>
               }
-              sx={{ marginTop: '16px' }}
+                    sx={{
+                      borderRadius: '8px',
+                      fontSize: '13px',
+                      '& .MuiAlert-message': {
+                        padding: '0 8px',
+                      },
+                    }}
             >
               {error}
             </Alert>
+                </Grow>
           )}
 
+              <Box sx={{ textAlign: 'center' }}>
           <Typography
             variant="body2"
             sx={{
-              marginTop: '32px',
-              textAlign: 'center',
+                    fontSize: '13px',
               color: theme.palette.text.secondary,
-              lineHeight: 1.8,
+                    lineHeight: 1.6,
             }}
           >
-            Create a token at:{' '}
-            <Link
+                  Don't have a token?{' '}
+                  <Box
+                    component="a"
               href="https://github.com/settings/tokens"
               target="_blank"
               rel="noopener noreferrer"
-              sx={{ fontWeight: 500 }}
+                    sx={{
+                      color: theme.palette.primary.main,
+                      textDecoration: 'none',
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                      transition: 'opacity 0.15s ease',
+                      '&:hover': {
+                        opacity: 0.8,
+                      },
+                    }}
             >
-              github.com/settings/tokens
-            </Link>
+                    Create one
+                  </Box>
           </Typography>
-        </Paper>
+              </Box>
+            </Stack>
+          </Box>
+        </Grow>
       </Container>
-      
-      <style>{`
-        @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </Box>
   );
 };
