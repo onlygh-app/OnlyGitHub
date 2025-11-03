@@ -1,8 +1,9 @@
 import React, { memo } from 'react';
 import { Box, useTheme, CircularProgress, Stack } from '@mui/material';
-import { Repository } from '../types';
+import { Repository, PageType, User } from '../types';
 import { RepositoryList } from './RepositoryList';
 import { WaterfallList } from './WaterfallList';
+import { MyContent } from './MyContent';
 import { Toast } from './Toast';
 
 interface MainContentProps {
@@ -10,8 +11,9 @@ interface MainContentProps {
   loading: boolean;
   error: string;
   onLoadMore: () => void;
-  currentPage: 'explore' | 'trending';
+  currentPage: PageType;
   onErrorClear?: () => void;
+  user?: User | null;
 }
 
 const MainContentComponent: React.FC<MainContentProps> = ({
@@ -21,10 +23,11 @@ const MainContentComponent: React.FC<MainContentProps> = ({
   onLoadMore,
   currentPage,
   onErrorClear,
+  user,
 }) => {
   const theme = useTheme();
   const isEmpty = repositories.length === 0;
-  const showInitialLoading = isEmpty && loading;
+  const showInitialLoading = isEmpty && loading && currentPage !== 'my';
 
   return (
     <Box
@@ -39,6 +42,15 @@ const MainContentComponent: React.FC<MainContentProps> = ({
     >
       {currentPage === 'explore' ? (
         <WaterfallList repositories={repositories} loading={loading} error={error} onLoadMore={onLoadMore} onErrorClear={onErrorClear} />
+      ) : currentPage === 'my' ? (
+        <MyContent
+          user={user || null}
+          repositories={repositories}
+          loading={loading}
+          error={error}
+          onLoadMore={onLoadMore}
+          onErrorClear={onErrorClear}
+        />
       ) : (
         <RepositoryList repositories={repositories} loading={loading} error={error} onLoadMore={onLoadMore} onErrorClear={onErrorClear} />
       )}

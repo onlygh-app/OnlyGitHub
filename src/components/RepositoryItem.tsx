@@ -8,8 +8,14 @@ import {
   Chip,
   Stack,
   useTheme,
+  Divider,
+  Grid,
 } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
+import ForkRightIcon from '@mui/icons-material/ForkRight';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import BugReportIcon from '@mui/icons-material/BugReport';
 import { Repository } from '../types';
 import { LazyImage } from './LazyImage';
 
@@ -17,6 +23,13 @@ interface RepositoryItemProps {
   repo: Repository;
   index: number;
 }
+
+const formatDate = (dateString: string): string => {
+  if (!dateString || dateString.trim() === '') return '';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+};
 
 const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index }) => {
   const theme = useTheme();
@@ -102,6 +115,42 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                 size="small"
                 variant="outlined"
               />
+              {repo.fork && (
+                <Chip
+                  icon={<ForkRightIcon sx={{ fontSize: '14px !important' }} />}
+                  label="Fork"
+                  size="small"
+                  variant="outlined"
+                  sx={{
+                    borderColor: theme.palette.info.main,
+                    color: theme.palette.info.main,
+                  }}
+                />
+              )}
+              {repo.archived && (
+                <Chip
+                  icon={<ArchiveIcon sx={{ fontSize: '14px !important' }} />}
+                  label="Archived"
+                  size="small"
+                  variant="outlined"
+                  sx={{
+                    borderColor: theme.palette.text.disabled,
+                    color: theme.palette.text.disabled,
+                  }}
+                />
+              )}
+              {repo.visibility && (
+                <Chip
+                  icon={<VisibilityIcon sx={{ fontSize: '14px !important' }} />}
+                  label={repo.visibility}
+                  size="small"
+                  variant="outlined"
+                  sx={{
+                    borderColor: repo.visibility === 'private' ? theme.palette.error.main : theme.palette.success.main,
+                    color: repo.visibility === 'private' ? theme.palette.error.main : theme.palette.success.main,
+                  }}
+                />
+              )}
               {repo.language && (
                 <Chip
                   label={repo.language}
@@ -119,7 +168,63 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                   color: theme.palette.warning.main,
                 }}
               />
+              {repo.forks_count > 0 && (
+                <Chip
+                  icon={<ForkRightIcon sx={{ fontSize: '14px !important' }} />}
+                  label={repo.forks_count}
+                  size="small"
+                  variant="outlined"
+                />
+              )}
+              {repo.open_issues_count > 0 && (
+                <Chip
+                  icon={<BugReportIcon sx={{ fontSize: '14px !important' }} />}
+                  label={repo.open_issues_count}
+                  size="small"
+                  variant="outlined"
+                  sx={{
+                    borderColor: theme.palette.error.main,
+                    color: theme.palette.error.main,
+                  }}
+                />
+              )}
             </Stack>
+
+            {(repo.pushed_at || repo.permissions) && (
+              <>
+                <Divider sx={{ marginY: theme.spacing(1) }} />
+                <Grid container spacing={1}>
+                  {repo.pushed_at && (
+                    <Grid item xs={12} sm={6}>
+                      <Typography variant="caption" color="textSecondary">
+                        Pushed: {formatDate(repo.pushed_at)}
+                      </Typography>
+                    </Grid>
+                  )}
+                  {repo.permissions && (
+                    <Grid item xs={12} sm={6}>
+                      <Stack direction="row" spacing={0.5} flexWrap="wrap" gap={0.5}>
+                        {repo.permissions.admin && (
+                          <Chip label="Admin" size="small" sx={{ height: '20px', fontSize: '10px' }} />
+                        )}
+                        {repo.permissions.maintain && (
+                          <Chip label="Maintain" size="small" sx={{ height: '20px', fontSize: '10px' }} />
+                        )}
+                        {repo.permissions.push && (
+                          <Chip label="Push" size="small" sx={{ height: '20px', fontSize: '10px' }} />
+                        )}
+                        {repo.permissions.triage && (
+                          <Chip label="Triage" size="small" sx={{ height: '20px', fontSize: '10px' }} />
+                        )}
+                        {repo.permissions.pull && (
+                          <Chip label="Pull" size="small" sx={{ height: '20px', fontSize: '10px' }} />
+                        )}
+                      </Stack>
+                    </Grid>
+                  )}
+                </Grid>
+              </>
+            )}
           </Box>
 
           <Link

@@ -12,19 +12,21 @@ import {
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { SidebarPosition } from '../types';
+import { PageType } from '../types';
 
 interface SidebarProps {
   width: number;
   position: SidebarPosition;
-  currentPage: 'explore' | 'trending';
+  currentPage: PageType;
   pageTitle?: string;
   isResizing: boolean;
   onMouseDown: () => void;
-  onPageChange: (page: 'explore' | 'trending') => void;
+  onPageChange: (page: PageType) => void;
   onTogglePosition: () => void;
   onLogout: () => void;
   onSidebarResize?: (width: number) => void;
@@ -68,10 +70,10 @@ const SidebarComponent: React.FC<SidebarProps> = ({
     if (!isResizing) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const minWidth = 200;
-      const maxWidth = 400;
-      let newWidth = position === 'left' ? e.clientX : window.innerWidth - e.clientX;
-      newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
+        const minWidth = 200;
+        const maxWidth = 400;
+        let newWidth = position === 'left' ? e.clientX : window.innerWidth - e.clientX;
+        newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
       
       // Store the pending width
       pendingWidthRef.current = newWidth;
@@ -182,6 +184,27 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             <TrendingUpIcon />
           </ListItemIcon>
           <ListItemText primary="Trending" />
+        </ListItem>
+
+        <ListItem
+          button
+          selected={currentPage === 'my'}
+          onClick={() => onPageChange('my')}
+          sx={{
+            mb: 1,
+            borderRadius: 1,
+            '&.Mui-selected': {
+              backgroundColor: theme.palette.action.selected,
+            },
+            '&:hover': {
+              backgroundColor: theme.palette.action.hover,
+            },
+          }}
+        >
+          <ListItemIcon>
+            <PersonIcon />
+          </ListItemIcon>
+          <ListItemText primary="My" />
         </ListItem>
       </List>
 

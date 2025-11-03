@@ -1,14 +1,22 @@
 import React, { memo } from 'react';
 import { AppBar, Box, Typography, useTheme } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import { PageType } from '../types';
 
 interface AppHeaderProps {
-  currentPage: 'explore' | 'trending';
+  currentPage: PageType;
 }
 
 const AppHeaderComponent: React.FC<AppHeaderProps> = ({ currentPage }) => {
   const theme = useTheme();
-  const title = currentPage === 'explore' ? 'Explore' : 'Trending';
+  
+  const titleMap: Record<PageType, string> = {
+    explore: 'Explore',
+    trending: 'Trending',
+    my: 'My',
+  };
+  
+  const title = titleMap[currentPage];
 
   return (
     <AppBar

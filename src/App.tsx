@@ -90,8 +90,9 @@ export const App: React.FC = () => {
       onLoadMore: repo.loadMore,
       currentPage: repo.currentPage,
       onErrorClear: () => repo.setError(''),
+      user: repo.user,
     }),
-    [currentData, repo.loading, repo.error, repo.loadMore, repo.currentPage]
+    [currentData, repo.loading, repo.error, repo.loadMore, repo.currentPage, repo.user]
   );
 
   if (!auth.isAuthenticated) {
@@ -128,15 +129,15 @@ export const App: React.FC = () => {
             flexDirection: 'var(--flex-direction)',
             flex: 1,
             minHeight: 0,
-            userSelect: sidebar.isResizing ? 'none' : 'auto',
-            WebkitUserSelect: sidebar.isResizing ? 'none' : 'auto',
-          }}
-        >
-          <Sidebar
+          userSelect: sidebar.isResizing ? 'none' : 'auto',
+          WebkitUserSelect: sidebar.isResizing ? 'none' : 'auto',
+        }}
+      >
+        <Sidebar
             {...sidebarProps}
-          />
+        />
 
-          <MainContent
+        <MainContent
             {...mainContentProps}
           />
         </Box>

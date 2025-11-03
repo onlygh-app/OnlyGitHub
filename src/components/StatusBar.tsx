@@ -2,9 +2,10 @@ import React, { memo } from 'react';
 import { Box, Typography, useTheme, Stack } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import FolderIcon from '@mui/icons-material/Folder';
+import { PageType } from '../types';
 
 interface StatusBarProps {
-  currentPage: 'explore' | 'trending';
+  currentPage: PageType;
   repositoryCount: number;
   loading: boolean;
 }

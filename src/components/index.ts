@@ -9,3 +9,5 @@ export { ErrorMessage } from './ErrorMessage';
 export { Toast } from './Toast';
 export { AppHeader } from './AppHeader';
 export { StatusBar } from './StatusBar';
+export { MyProfile } from './MyProfile';
+export { MyContent } from './MyContent';
