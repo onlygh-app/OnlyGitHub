@@ -1,189 +1,272 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import {
-  Box,
-  Button,
-  Typography,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   Divider,
-  Stack,
-  Paper,
+  Box,
+  IconButton,
   useTheme,
 } from '@mui/material';
-import ExploreIcon from '@mui/icons-material/Explore';
+import HomeIcon from '@mui/icons-material/Home';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import LogoutIcon from '@mui/icons-material/Logout';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import { PageType } from '../types';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { SidebarPosition } from '../types';
 
 interface SidebarProps {
   width: number;
-  position: 'left' | 'right';
-  currentPage: PageType;
-  pageTitle: string;
+  position: SidebarPosition;
+  currentPage: 'explore' | 'trending';
+  pageTitle?: string;
   isResizing: boolean;
   onMouseDown: () => void;
-  onPageChange: (page: PageType) => void;
+  onPageChange: (page: 'explore' | 'trending') => void;
   onTogglePosition: () => void;
   onLogout: () => void;
+  onSidebarResize?: (width: number) => void;
 }
 
 const SidebarComponent: React.FC<SidebarProps> = ({
   width,
   position,
   currentPage,
-  pageTitle,
   isResizing,
   onMouseDown,
   onPageChange,
   onTogglePosition,
   onLogout,
+  onSidebarResize,
 }) => {
   const theme = useTheme();
-  const handleNavClick = useCallback((page: PageType) => {
-    onPageChange(page);
-  }, [onPageChange]);
+  const rafRef = useRef<number | null>(null);
+  const pendingWidthRef = useRef<number | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const prevPositionRef = useRef(position);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    if (prevPositionRef.current !== position) {
+      setIsAnimating(true);
+      timer = setTimeout(() => setIsAnimating(false), 400);
+      prevPositionRef.current = position;
+    }
+    return () => {
+      if (timer !== null) clearTimeout(timer);
+    };
+  }, [position]);
+
+  useEffect(() => {
+    // Initialize CSS variable
+    document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
+  }, [width]);
+
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const minWidth = 200;
+      const maxWidth = 400;
+      let newWidth = position === 'left' ? e.clientX : window.innerWidth - e.clientX;
+      newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
+      
+      // Store the pending width
+      pendingWidthRef.current = newWidth;
+
+      // Cancel any pending animation frame
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
+
+      // Schedule update on next frame
+      rafRef.current = requestAnimationFrame(() => {
+        if (pendingWidthRef.current !== null) {
+          // Update CSS variable for immediate visual feedback
+          document.documentElement.style.setProperty('--sidebar-width', `${pendingWidthRef.current}px`);
+          // Update state for persistence
+          if (onSidebarResize) {
+            onSidebarResize(pendingWidthRef.current);
+          }
+          rafRef.current = null;
+        }
+      });
+    };
+
+    document.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, [isResizing, position, onSidebarResize]);
+
+  const sidebarContent = (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        backgroundColor: theme.palette.background.paper,
+      }}
+    >
+      <Box sx={{ p: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Box sx={{ fontWeight: 600, color: theme.palette.text.primary }}>Menu</Box>
+          <IconButton 
+            size="small" 
+            onClick={onTogglePosition}
+            sx={{
+              transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              transform: isAnimating ? 'rotate(180deg)' : 'rotate(0deg)',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              },
+            }}
+          >
+            {position === 'left' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </Box>
+      </Box>
+
+      <Divider />
+
+      <List sx={{ flex: 1, px: 1 }}>
+        <ListItem
+          button
+          selected={currentPage === 'explore'}
+          onClick={() => onPageChange('explore')}
+          sx={{
+            mb: 1,
+            borderRadius: 1,
+            '&.Mui-selected': {
+              backgroundColor: theme.palette.action.selected,
+            },
+            '&:hover': {
+              backgroundColor: theme.palette.action.hover,
+            },
+          }}
+        >
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Explore" />
+        </ListItem>
+
+        <ListItem
+          button
+          selected={currentPage === 'trending'}
+          onClick={() => onPageChange('trending')}
+          sx={{
+            mb: 1,
+            borderRadius: 1,
+            '&.Mui-selected': {
+              backgroundColor: theme.palette.action.selected,
+            },
+            '&:hover': {
+              backgroundColor: theme.palette.action.hover,
+            },
+          }}
+        >
+          <ListItemIcon>
+            <TrendingUpIcon />
+          </ListItemIcon>
+          <ListItemText primary="Trending" />
+        </ListItem>
+      </List>
+
+      <Divider />
+
+      <List sx={{ px: 1 }}>
+        <ListItem
+          button
+          onClick={onLogout}
+          sx={{
+            borderRadius: 1,
+            '&:hover': {
+              backgroundColor: theme.palette.action.hover,
+            },
+          }}
+        >
+          <ListItemIcon>
+            <LogoutIcon />
+          </ListItemIcon>
+          <ListItemText primary="Logout" />
+        </ListItem>
+      </List>
+
+      {position === 'left' && (
+        <Box
+          onMouseDown={onMouseDown}
+          sx={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: '4px',
+            cursor: 'col-resize',
+            backgroundColor: 'transparent',
+            '&:hover': {
+              backgroundColor: theme.palette.primary.main,
+            },
+            transition: 'background-color 0.2s',
+          }}
+        />
+      )}
+
+      {position === 'right' && (
+        <Box
+          onMouseDown={onMouseDown}
+          sx={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: '4px',
+            cursor: 'col-resize',
+            backgroundColor: 'transparent',
+            '&:hover': {
+              backgroundColor: theme.palette.primary.main,
+            },
+            transition: 'background-color 0.2s',
+          }}
+        />
+      )}
+    </Box>
+  );
 
   return (
-    <>
-      <Paper
-        elevation={0}
-        sx={{
-          width: `${width}px`,
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          order: position === 'right' ? 2 : 1,
-          background: theme.palette.background.paper,
-          borderRight: position === 'left' ? `1px solid ${theme.palette.divider}` : 'none',
-          borderLeft: position === 'right' ? `1px solid ${theme.palette.divider}` : 'none',
-        }}
-      >
-        <Box sx={{ padding: '24px 16px' }}>
-          <Typography
-            variant="h6"
-            component="h1"
-            sx={{
-              background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              marginBottom: '8px',
-            }}
-          >
-            OnlyGitHub
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              color: theme.palette.text.secondary,
-            }}
-          >
-            {pageTitle}
-          </Typography>
-        </Box>
-
-        <Divider />
-
-        <Stack
-          spacing={1}
-          sx={{
-            flex: 1,
-            padding: '16px',
-          }}
-        >
-          <Button
-            fullWidth
-            startIcon={<ExploreIcon />}
-            onClick={() => handleNavClick('explore')}
-            variant={currentPage === 'explore' ? 'contained' : 'text'}
-            sx={{
-              justifyContent: 'flex-start',
-              backgroundColor: currentPage === 'explore' ? theme.palette.primary.main : 'transparent',
-              color: currentPage === 'explore' ? '#fff' : theme.palette.text.secondary,
-              '&:hover': {
-                backgroundColor: currentPage === 'explore' ? theme.palette.primary.main : 'rgba(88, 166, 255, 0.1)',
-              },
-            }}
-            title="Explore repositories"
-          >
-            Explore
-          </Button>
-          <Button
-            fullWidth
-            startIcon={<TrendingUpIcon />}
-            onClick={() => handleNavClick('trending')}
-            variant={currentPage === 'trending' ? 'contained' : 'text'}
-            sx={{
-              justifyContent: 'flex-start',
-              backgroundColor: currentPage === 'trending' ? theme.palette.primary.main : 'transparent',
-              color: currentPage === 'trending' ? '#fff' : theme.palette.text.secondary,
-              '&:hover': {
-                backgroundColor: currentPage === 'trending' ? theme.palette.primary.main : 'rgba(88, 166, 255, 0.1)',
-              },
-            }}
-            title="View trending repositories"
-          >
-            Trending
-          </Button>
-        </Stack>
-
-        <Divider />
-
-        <Stack
-          spacing={1}
-          sx={{
-            padding: '16px',
-          }}
-        >
-          <Button
-            fullWidth
-            startIcon={<CompareArrowsIcon />}
-            onClick={onTogglePosition}
-            variant="text"
-            sx={{
-              justifyContent: 'flex-start',
-              color: theme.palette.text.secondary,
-              '&:hover': {
-                backgroundColor: 'rgba(88, 166, 255, 0.1)',
-              },
-            }}
-            title={`Move to ${position === 'left' ? 'right' : 'left'}`}
-          >
-            Move
-          </Button>
-          <Button
-            fullWidth
-            startIcon={<LogoutIcon />}
-            onClick={onLogout}
-            variant="text"
-            sx={{
-              justifyContent: 'flex-start',
-              color: theme.palette.error.main,
-              '&:hover': {
-                backgroundColor: 'rgba(248, 81, 73, 0.1)',
-              },
-            }}
-            title="Logout"
-          >
-            Logout
-          </Button>
-        </Stack>
-      </Paper>
-
-      <Box
-        onMouseDown={onMouseDown}
-        sx={{
-          width: '4px',
-          cursor: isResizing ? 'col-resize' : 'pointer',
-          backgroundColor: theme.palette.divider,
-          transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-          '&:hover': {
-            backgroundColor: theme.palette.primary.main,
-          },
-        }}
-        role="separator"
-        aria-label="Sidebar resize handle"
-      />
-    </>
+    <Drawer
+      variant="permanent"
+      anchor={position}
+      sx={{
+        width: 'var(--sidebar-width, 250px)',
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
+          width: 'var(--sidebar-width, 250px)',
+          position: 'relative',
+          transition: isResizing 
+            ? 'none' 
+            : `width 0.3s ease${isAnimating ? ', opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)' : ''}`,
+          opacity: isAnimating ? 0.6 : 1,
+          transform: isAnimating 
+            ? (position === 'left' ? 'translateX(-20px)' : 'translateX(20px)')
+            : 'translateX(0)',
+        },
+      }}
+    >
+      {sidebarContent}
+    </Drawer>
   );
 };
 

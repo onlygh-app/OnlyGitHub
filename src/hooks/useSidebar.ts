@@ -1,68 +1,53 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { SidebarPosition } from '../types';
-import { storageService } from '../services/storage';
 
 export const useSidebar = () => {
-  const [sidebarWidth, setSidebarWidth] = useState<number>(260);
+  const [sidebarWidth, setSidebarWidthState] = useState(250);
   const [sidebarPosition, setSidebarPosition] = useState<SidebarPosition>('left');
-  const [isResizing, setIsResizing] = useState<boolean>(false);
+  const [isResizing, setIsResizing] = useState(false);
 
   const initSidebar = useCallback(() => {
-    const savedWidth = storageService.getSidebarWidth(260);
-    const savedPosition = storageService.getSidebarPosition('left');
-    setSidebarWidth(savedWidth);
-    setSidebarPosition(savedPosition);
+    const savedWidth = localStorage.getItem('sidebarWidth');
+    const savedPosition = localStorage.getItem('sidebarPosition') as SidebarPosition;
+
+    if (savedWidth) {
+      setSidebarWidthState(parseInt(savedWidth, 10));
+    }
+    if (savedPosition) {
+      setSidebarPosition(savedPosition);
+    }
+  }, []);
+
+  const setSidebarWidth = useCallback((width: number) => {
+    setSidebarWidthState(width);
+    localStorage.setItem('sidebarWidth', String(width));
   }, []);
 
   const handleMouseDown = useCallback(() => {
     setIsResizing(true);
   }, []);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isResizing) return;
-
-      const minWidth = 200;
-      const maxWidth = 500;
-      let newWidth = e.clientX;
-
-      if (sidebarPosition === 'right') {
-        newWidth = window.innerWidth - e.clientX;
-      }
-
-      if (newWidth >= minWidth && newWidth <= maxWidth) {
-        setSidebarWidth(newWidth);
-        storageService.setSidebarWidth(newWidth);
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsResizing(false);
-    };
-
-    if (isResizing) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isResizing, sidebarPosition]);
+  const handleMouseUp = useCallback(() => {
+    setIsResizing(false);
+  }, []);
 
   const togglePosition = useCallback(() => {
-    const newPosition = sidebarPosition === 'left' ? 'right' : 'left';
-    setSidebarPosition(newPosition);
-    storageService.setSidebarPosition(newPosition);
-  }, [sidebarPosition]);
+    setSidebarPosition(prev => {
+      const newPosition: SidebarPosition = prev === 'left' ? 'right' : 'left';
+      localStorage.setItem('sidebarPosition', newPosition);
+      return newPosition;
+    });
+  }, []);
 
   return {
     sidebarWidth,
+    setSidebarWidth,
     sidebarPosition,
     isResizing,
+    setIsResizing,
     initSidebar,
     handleMouseDown,
+    handleMouseUp,
     togglePosition,
   };
 };
