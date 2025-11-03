@@ -38,6 +38,7 @@ export const App: React.FC = () => {
         error={auth.error}
         onTokenChange={auth.setTempToken}
         onSubmit={handleTokenSubmit}
+        onErrorClear={() => auth.setError('')}
       />
     );
   }
@@ -65,6 +66,7 @@ export const App: React.FC = () => {
         error={repo.error}
         onLoadMore={repo.loadMore}
         currentPage={repo.currentPage}
+        onErrorClear={() => repo.setError('')}
       />
     </div>
   );

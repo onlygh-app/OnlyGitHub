@@ -1,12 +1,14 @@
 import React, { memo, useEffect, useRef, useCallback } from 'react';
 import { Repository } from '../types';
 import { RepositoryItem } from './RepositoryItem';
+import { ErrorMessage } from './ErrorMessage';
 
 interface RepositoryListProps {
   repositories: Repository[];
   loading: boolean;
   error: string;
   onLoadMore: () => void;
+  onErrorClear?: () => void;
 }
 
 const RepositoryListComponent: React.FC<RepositoryListProps> = ({
@@ -14,6 +16,7 @@ const RepositoryListComponent: React.FC<RepositoryListProps> = ({
   loading,
   error,
   onLoadMore,
+  onErrorClear,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -38,7 +41,7 @@ const RepositoryListComponent: React.FC<RepositoryListProps> = ({
 
   return (
     <div className="content" ref={contentRef}>
-      {error && <p className="error-message">{error}</p>}
+      <ErrorMessage message={error} onClose={onErrorClear} />
 
       <div className="repos-list">
         {repositories.length === 0 && !loading && (

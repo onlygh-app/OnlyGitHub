@@ -9,6 +9,7 @@ interface MainContentProps {
   error: string;
   onLoadMore: () => void;
   currentPage: 'explore' | 'trending';
+  onErrorClear?: () => void;
 }
 
 const MainContentComponent: React.FC<MainContentProps> = ({
@@ -17,13 +18,14 @@ const MainContentComponent: React.FC<MainContentProps> = ({
   error,
   onLoadMore,
   currentPage,
+  onErrorClear,
 }) => {
   return (
     <main className="main-content">
       {currentPage === 'explore' ? (
-        <WaterfallList repositories={repositories} loading={loading} error={error} onLoadMore={onLoadMore} />
+        <WaterfallList repositories={repositories} loading={loading} error={error} onLoadMore={onLoadMore} onErrorClear={onErrorClear} />
       ) : (
-        <RepositoryList repositories={repositories} loading={loading} error={error} onLoadMore={onLoadMore} />
+        <RepositoryList repositories={repositories} loading={loading} error={error} onLoadMore={onLoadMore} onErrorClear={onErrorClear} />
       )}
     </main>
   );

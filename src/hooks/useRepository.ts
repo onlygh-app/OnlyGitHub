@@ -82,6 +82,7 @@ export const useRepository = () => {
     setCurrentPage,
     loading,
     error,
+    setError,
     fetchRepositories,
     clearRepositories,
     getCurrentData,

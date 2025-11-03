@@ -5,3 +5,4 @@ export { RepositoryList } from './RepositoryList';
 export { RepositoryItem } from './RepositoryItem';
 export { LazyImage } from './LazyImage';
 export { WaterfallList } from './WaterfallList';
+export { ErrorMessage } from './ErrorMessage';

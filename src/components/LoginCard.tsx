@@ -1,10 +1,12 @@
 import React, { memo, useCallback } from 'react';
+import { ErrorMessage } from './ErrorMessage';
 
 interface LoginCardProps {
   token: string;
   error: string;
   onTokenChange: (value: string) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onErrorClear?: () => void;
 }
 
 const LoginCardComponent: React.FC<LoginCardProps> = ({
@@ -12,6 +14,7 @@ const LoginCardComponent: React.FC<LoginCardProps> = ({
   error,
   onTokenChange,
   onSubmit,
+  onErrorClear,
 }) => {
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     onTokenChange(e.target.value);
@@ -36,7 +39,7 @@ const LoginCardComponent: React.FC<LoginCardProps> = ({
             Login
           </button>
         </form>
-        {error && <p className="error-message">{error}</p>}
+        <ErrorMessage message={error} onClose={onErrorClear} variant="card" />
         <p className="help-text">
           Create a token at:{' '}
           <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">

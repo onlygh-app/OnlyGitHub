@@ -19,15 +19,15 @@ const transformRepoData = (repo: any): Repository => ({
 export const setupGitHubIPCHandlers = (): void => {
   ipcMain.handle('fetch-explore-repos', async (_event, token: string, page: number = 1) => {
     try {
-      // 每次请求都生成随机参数，确保真正的随机性
-      const randomStars = Math.floor(Math.random() * 80000) + 50; // 随机50-80000
+      // 每次请求都生成随机参数
+      const randomStars = Math.floor(Math.random() * 8000) + 50; // 随机50-8000
       const orders = ['asc', 'desc'];
       const sorts = ['stars', 'updated', 'forks', 'watchers'];
       const randomOrder = orders[Math.floor(Math.random() * orders.length)];
       const randomSort = sorts[Math.floor(Math.random() * sorts.length)];
       
       // 随机的时间范围也能增加多样性
-      const randomYear = Math.floor(Math.random() * 5) + 2019; // 2019-2024
+      const randomYear = Math.floor(Math.random() * 5) + 2019; // 2019
       const randomMonth = Math.floor(Math.random() * 12) + 1;
 
       const response = await fetch(
