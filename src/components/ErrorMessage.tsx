@@ -19,23 +19,23 @@ const ErrorMessageComponent: React.FC<ErrorMessageProps> = ({
   if (!message) return null;
 
   const alertContent = (
-    <Alert
-      severity="error"
-      action={
-        <IconButton
-          size="small"
-          color="inherit"
-          onClick={onClose}
-        >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      }
-      sx={{
+      <Alert
+        severity="error"
+        action={
+          <IconButton
+            size="small"
+            color="inherit"
+            onClick={onClose}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
+        sx={{
         borderRadius: theme.spacing(variant === 'banner' ? 1 : 0.5),
-      }}
-    >
-      {message}
-    </Alert>
+        }}
+      >
+        {message}
+      </Alert>
   );
 
   if (variant === 'banner') {

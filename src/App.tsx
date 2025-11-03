@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useRef, useMemo } from 'react';
 import { CssBaseline, Box, ThemeProvider } from '@mui/material';
-import { LoginCard, Sidebar, MainContent } from './components';
+import { LoginCard, Sidebar, MainContent, AppHeader, StatusBar } from './components';
 import { useAuth, useRepository, useSidebar } from './hooks';
 import darkTheme from './theme';
 
@@ -115,19 +115,36 @@ export const App: React.FC = () => {
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'var(--flex-direction)',
+          flexDirection: 'column',
           width: '100%',
           height: '100%',
-          userSelect: sidebar.isResizing ? 'none' : 'auto',
-          WebkitUserSelect: sidebar.isResizing ? 'none' : 'auto',
         }}
       >
-        <Sidebar
-          {...sidebarProps}
-        />
+        <AppHeader currentPage={repo.currentPage} />
 
-        <MainContent
-          {...mainContentProps}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'var(--flex-direction)',
+            flex: 1,
+            minHeight: 0,
+            userSelect: sidebar.isResizing ? 'none' : 'auto',
+            WebkitUserSelect: sidebar.isResizing ? 'none' : 'auto',
+          }}
+        >
+          <Sidebar
+            {...sidebarProps}
+          />
+
+          <MainContent
+            {...mainContentProps}
+          />
+        </Box>
+
+        <StatusBar 
+          currentPage={repo.currentPage}
+          repositoryCount={currentData.length}
+          loading={repo.loading}
         />
       </Box>
     </ThemeProvider>

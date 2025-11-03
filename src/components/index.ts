@@ -7,3 +7,5 @@ export { LazyImage } from './LazyImage';
 export { WaterfallList } from './WaterfallList';
 export { ErrorMessage } from './ErrorMessage';
 export { Toast } from './Toast';
+export { AppHeader } from './AppHeader';
+export { StatusBar } from './StatusBar';

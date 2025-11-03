@@ -41,7 +41,7 @@ const RepositoryListComponent: React.FC<RepositoryListProps> = ({
   useEffect(() => {
     const element = contentRef.current;
     if (element) {
-      element.addEventListener('scroll', handleScroll);
+      element.addEventListener('scroll', handleScroll, { passive: true });
       return () => element.removeEventListener('scroll', handleScroll);
     }
     return undefined;
