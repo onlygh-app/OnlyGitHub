@@ -1,4 +1,6 @@
 import React, { memo } from 'react';
+import { Alert, Box, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface ErrorMessageProps {
   message: string;
@@ -13,24 +15,23 @@ const ErrorMessageComponent: React.FC<ErrorMessageProps> = ({
 }) => {
   if (!message) return null;
 
-  const containerClass = variant === 'card' ? 'error-message-container-card' : 'error-message-container';
-
-  const handleClose = () => {
-    onClose?.();
-  };
-
   return (
-    <div className={containerClass}>
-      <p className="error-message">{message}</p>
-      <button
-        className={variant === 'card' ? 'close-error-btn' : 'close-button'}
-        onClick={handleClose}
-        type="button"
-        aria-label="Close error message"
+    <Box sx={{ marginBottom: variant === 'card' ? '24px' : '16px' }}>
+      <Alert
+        severity="error"
+        action={
+          <IconButton
+            size="small"
+            color="inherit"
+            onClick={onClose}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
       >
-        &times;
-      </button>
-    </div>
+        {message}
+      </Alert>
+    </Box>
   );
 };
 

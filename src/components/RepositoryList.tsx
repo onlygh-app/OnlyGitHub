@@ -1,4 +1,10 @@
 import React, { memo, useEffect, useRef, useCallback } from 'react';
+import {
+  Box,
+  CircularProgress,
+  Typography,
+  Container,
+} from '@mui/material';
 import { Repository } from '../types';
 import { RepositoryItem } from './RepositoryItem';
 import { ErrorMessage } from './ErrorMessage';
@@ -40,22 +46,46 @@ const RepositoryListComponent: React.FC<RepositoryListProps> = ({
   }, [handleScroll]);
 
   return (
-    <div className="content" ref={contentRef}>
+    <Box
+      ref={contentRef}
+      sx={{
+        flex: 1,
+        overflowY: 'auto',
+        padding: '24px',
+        backgroundColor: 'var(--color-bg-primary, #0d1117)',
+      }}
+    >
       <ErrorMessage message={error} onClose={onErrorClear} />
 
-      <div className="repos-list">
+      <Container maxWidth="md">
         {repositories.length === 0 && !loading && (
-          <p className="empty-state">No repositories found</p>
+          <Box sx={{ textAlign: 'center', paddingY: '48px' }}>
+            <Typography
+              variant="h6"
+              sx={{
+                color: '#8b949e',
+              }}
+            >
+              No repositories found
+            </Typography>
+          </Box>
         )}
+
         {repositories.map((repo, index) => (
           <RepositoryItem key={repo.id} repo={repo} index={index} />
         ))}
-      </div>
 
-      {loading && repositories.length > 0 && (
-        <p className="loading">Loading more repositories...</p>
-      )}
-    </div>
+        {loading && repositories.length > 0 && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', paddingY: '24px' }}>
+            <CircularProgress
+              sx={{
+                color: '#58a6ff',
+              }}
+            />
+          </Box>
+        )}
+      </Container>
+    </Box>
   );
 };
 

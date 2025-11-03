@@ -1,4 +1,16 @@
-import React, { useRef, memo, useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
+import {
+  Box,
+  Button,
+  Typography,
+  Divider,
+  Stack,
+  Paper,
+} from '@mui/material';
+import ExploreIcon from '@mui/icons-material/Explore';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import LogoutIcon from '@mui/icons-material/Logout';
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { PageType } from '../types';
 
 interface SidebarProps {
@@ -24,65 +36,154 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   onTogglePosition,
   onLogout,
 }) => {
-  const sidebarRef = useRef<HTMLDivElement>(null);
-
   const handleNavClick = useCallback((page: PageType) => {
     onPageChange(page);
   }, [onPageChange]);
 
   return (
     <>
-      <aside
-        className="sidebar"
-        ref={sidebarRef}
-        style={{ width: `${width}px` }}
+      <Paper
+        elevation={0}
+        sx={{
+          width: `${width}px`,
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          order: position === 'right' ? 2 : 1,
+          background: '#161b22',
+          borderRight: position === 'left' ? '1px solid #30363d' : 'none',
+          borderLeft: position === 'right' ? '1px solid #30363d' : 'none',
+        }}
       >
-        <div className="sidebar-header">
-          <div className="sidebar-title">
-            <h1>OnlyGitHub</h1>
-            <p className="current-page">{pageTitle}</p>
-          </div>
-        </div>
+        <Box sx={{ padding: '24px 16px' }}>
+          <Typography
+            variant="h6"
+            component="h1"
+            sx={{
+              color: '#58a6ff',
+              fontWeight: 700,
+              marginBottom: '8px',
+            }}
+          >
+            OnlyGitHub
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#8b949e',
+            }}
+          >
+            {pageTitle}
+          </Typography>
+        </Box>
 
-        <nav className="sidebar-nav">
-          <button
-            className={`nav-item ${currentPage === 'explore' ? 'active' : ''}`}
+        <Divider sx={{ backgroundColor: '#30363d' }} />
+
+        <Stack
+          spacing={1}
+          sx={{
+            flex: 1,
+            padding: '16px',
+          }}
+        >
+          <Button
+            fullWidth
+            startIcon={<ExploreIcon />}
             onClick={() => handleNavClick('explore')}
+            variant={currentPage === 'explore' ? 'contained' : 'text'}
+            sx={{
+              justifyContent: 'flex-start',
+              textTransform: 'none',
+              fontSize: '14px',
+              color: currentPage === 'explore' ? '#fff' : '#8b949e',
+              backgroundColor: currentPage === 'explore' ? '#58a6ff' : 'transparent',
+              '&:hover': {
+                backgroundColor: currentPage === 'explore' ? '#58a6ff' : 'rgba(88, 166, 255, 0.1)',
+              },
+            }}
             title="Explore repositories"
           >
-            <span className="nav-icon">E</span>
-            <span className="nav-label">Explore</span>
-          </button>
-          <button
-            className={`nav-item ${currentPage === 'trending' ? 'active' : ''}`}
+            Explore
+          </Button>
+          <Button
+            fullWidth
+            startIcon={<TrendingUpIcon />}
             onClick={() => handleNavClick('trending')}
+            variant={currentPage === 'trending' ? 'contained' : 'text'}
+            sx={{
+              justifyContent: 'flex-start',
+              textTransform: 'none',
+              fontSize: '14px',
+              color: currentPage === 'trending' ? '#fff' : '#8b949e',
+              backgroundColor: currentPage === 'trending' ? '#58a6ff' : 'transparent',
+              '&:hover': {
+                backgroundColor: currentPage === 'trending' ? '#58a6ff' : 'rgba(88, 166, 255, 0.1)',
+              },
+            }}
             title="View trending repositories"
           >
-            <span className="nav-icon">T</span>
-            <span className="nav-label">Trending</span>
-          </button>
-        </nav>
+            Trending
+          </Button>
+        </Stack>
 
-        <div className="sidebar-footer">
-          <button
+        <Divider sx={{ backgroundColor: '#30363d' }} />
+
+        <Stack
+          spacing={1}
+          sx={{
+            padding: '16px',
+          }}
+        >
+          <Button
+            fullWidth
+            startIcon={<CompareArrowsIcon />}
             onClick={onTogglePosition}
-            className="position-btn"
+            variant="text"
+            sx={{
+              justifyContent: 'flex-start',
+              textTransform: 'none',
+              fontSize: '14px',
+              color: '#8b949e',
+              '&:hover': {
+                backgroundColor: 'rgba(88, 166, 255, 0.1)',
+              },
+            }}
             title={`Move to ${position === 'left' ? 'right' : 'left'}`}
           >
-            <span className="nav-icon">P</span>
-            <span className="nav-label">Move</span>
-          </button>
-          <button onClick={onLogout} className="logout-btn" title="Logout">
-            <span className="nav-icon">L</span>
-            <span className="nav-label">Logout</span>
-          </button>
-        </div>
-      </aside>
+            Move
+          </Button>
+          <Button
+            fullWidth
+            startIcon={<LogoutIcon />}
+            onClick={onLogout}
+            variant="text"
+            sx={{
+              justifyContent: 'flex-start',
+              textTransform: 'none',
+              fontSize: '14px',
+              color: '#f85149',
+              '&:hover': {
+                backgroundColor: 'rgba(248, 81, 73, 0.1)',
+              },
+            }}
+            title="Logout"
+          >
+            Logout
+          </Button>
+        </Stack>
+      </Paper>
 
-      <div
-        className="resize-handle"
+      <Box
         onMouseDown={onMouseDown}
-        style={{ cursor: isResizing ? 'col-resize' : 'pointer' }}
+        sx={{
+          width: '4px',
+          cursor: isResizing ? 'col-resize' : 'pointer',
+          backgroundColor: '#30363d',
+          transition: 'background-color 0.2s ease',
+          '&:hover': {
+            backgroundColor: '#58a6ff',
+          },
+        }}
         role="separator"
         aria-label="Sidebar resize handle"
       />

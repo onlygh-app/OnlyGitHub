@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { Box } from '@mui/material';
 import { Repository } from '../types';
 import { RepositoryList } from './RepositoryList';
 import { WaterfallList } from './WaterfallList';
@@ -21,13 +22,22 @@ const MainContentComponent: React.FC<MainContentProps> = ({
   onErrorClear,
 }) => {
   return (
-    <main className="main-content">
+    <Box
+      sx={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#0d1117',
+      }}
+    >
       {currentPage === 'explore' ? (
         <WaterfallList repositories={repositories} loading={loading} error={error} onLoadMore={onLoadMore} onErrorClear={onErrorClear} />
       ) : (
         <RepositoryList repositories={repositories} loading={loading} error={error} onLoadMore={onLoadMore} onErrorClear={onErrorClear} />
       )}
-    </main>
+    </Box>
   );
 };
 

@@ -1,5 +1,16 @@
 import React, { memo, useCallback } from 'react';
-import { ErrorMessage } from './ErrorMessage';
+import {
+  Container,
+  Paper,
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Link,
+  Alert,
+  IconButton,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface LoginCardProps {
   token: string;
@@ -21,33 +32,123 @@ const LoginCardComponent: React.FC<LoginCardProps> = ({
   }, [onTokenChange]);
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h1>OnlyGitHub</h1>
-        <p>Enter your GitHub Personal Access Token</p>
-        <form onSubmit={onSubmit}>
-          <input
-            type="password"
-            placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-            value={token}
-            onChange={handleInputChange}
-            className="token-input"
-            autoFocus
-            autoComplete="off"
-          />
-          <button type="submit" className="submit-btn">
-            Login
-          </button>
-        </form>
-        <ErrorMessage message={error} onClose={onErrorClear} variant="card" />
-        <p className="help-text">
-          Create a token at:{' '}
-          <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">
-            github.com/settings/tokens
-          </a>
-        </p>
-      </div>
-    </div>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#0d1117',
+        padding: '20px',
+      }}
+    >
+      <Container maxWidth="sm">
+        <Paper
+          elevation={2}
+          sx={{
+            padding: '48px 40px',
+            borderRadius: '8px',
+          }}
+        >
+          <Typography
+            variant="h4"
+            component="h1"
+            sx={{
+              color: '#58a6ff',
+              textAlign: 'center',
+              marginBottom: '12px',
+              fontWeight: 700,
+            }}
+          >
+            OnlyGitHub
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              textAlign: 'center',
+              marginBottom: '32px',
+              color: '#8b949e',
+            }}
+          >
+            Enter your GitHub Personal Access Token
+          </Typography>
+
+          <Box component="form" onSubmit={onSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <TextField
+              type="password"
+              placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+              value={token}
+              onChange={handleInputChange}
+              fullWidth
+              variant="outlined"
+              autoFocus
+              autoComplete="off"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '6px',
+                },
+              }}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              size="large"
+              sx={{
+                backgroundColor: '#58a6ff',
+                color: '#fff',
+                fontWeight: 600,
+                textTransform: 'none',
+                fontSize: '16px',
+                '&:hover': {
+                  backgroundColor: '#3fb950',
+                },
+              }}
+            >
+              Login
+            </Button>
+          </Box>
+
+          {error && (
+            <Alert
+              severity="error"
+              action={
+                <IconButton
+                  size="small"
+                  color="inherit"
+                  onClick={onErrorClear}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              }
+              sx={{ marginTop: '16px' }}
+            >
+              {error}
+            </Alert>
+          )}
+
+          <Typography
+            variant="body2"
+            sx={{
+              marginTop: '24px',
+              textAlign: 'center',
+              color: '#8b949e',
+            }}
+          >
+            Create a token at:{' '}
+            <Link
+              href="https://github.com/settings/tokens"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ color: '#58a6ff', textDecoration: 'none', fontWeight: 500 }}
+            >
+              github.com/settings/tokens
+            </Link>
+          </Typography>
+        </Paper>
+      </Container>
+    </Box>
   );
 };
 

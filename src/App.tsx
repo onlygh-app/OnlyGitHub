@@ -1,7 +1,39 @@
 import React, { useEffect, useCallback } from 'react';
-import './App.scss';
+import { CssBaseline, Box, ThemeProvider, createTheme } from '@mui/material';
 import { LoginCard, Sidebar, MainContent } from './components';
 import { useAuth, useRepository, useSidebar } from './hooks';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#58a6ff',
+    },
+    secondary: {
+      main: '#d2a8ff',
+    },
+    background: {
+      default: '#0d1117',
+      paper: '#161b22',
+    },
+    text: {
+      primary: '#e6edf3',
+      secondary: '#8b949e',
+    },
+    error: {
+      main: '#f85149',
+    },
+    warning: {
+      main: '#d29922',
+    },
+    success: {
+      main: '#3fb950',
+    },
+  },
+  typography: {
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+  },
+});
 
 export const App: React.FC = () => {
   const auth = useAuth();
@@ -33,13 +65,16 @@ export const App: React.FC = () => {
 
   if (!auth.isAuthenticated) {
     return (
-      <LoginCard
-        token={auth.tempToken}
-        error={auth.error}
-        onTokenChange={auth.setTempToken}
-        onSubmit={handleTokenSubmit}
-        onErrorClear={() => auth.setError('')}
-      />
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <LoginCard
+          token={auth.tempToken}
+          error={auth.error}
+          onTokenChange={auth.setTempToken}
+          onSubmit={handleTokenSubmit}
+          onErrorClear={() => auth.setError('')}
+        />
+      </ThemeProvider>
     );
   }
 
@@ -47,27 +82,38 @@ export const App: React.FC = () => {
   const pageInfo = repo.getPageInfo();
 
   return (
-    <div className={`app-container app-container--${sidebar.sidebarPosition}`}>
-      <Sidebar
-        width={sidebar.sidebarWidth}
-        position={sidebar.sidebarPosition}
-        currentPage={repo.currentPage}
-        pageTitle={pageInfo.title}
-        isResizing={sidebar.isResizing}
-        onMouseDown={sidebar.handleMouseDown}
-        onPageChange={repo.setCurrentPage}
-        onTogglePosition={sidebar.togglePosition}
-        onLogout={handleLogout}
-      />
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: sidebar.sidebarPosition === 'right' ? 'row-reverse' : 'row',
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#0d1117',
+        }}
+      >
+        <Sidebar
+          width={sidebar.sidebarWidth}
+          position={sidebar.sidebarPosition}
+          currentPage={repo.currentPage}
+          pageTitle={pageInfo.title}
+          isResizing={sidebar.isResizing}
+          onMouseDown={sidebar.handleMouseDown}
+          onPageChange={repo.setCurrentPage}
+          onTogglePosition={sidebar.togglePosition}
+          onLogout={handleLogout}
+        />
 
-      <MainContent
-        repositories={currentData}
-        loading={repo.loading}
-        error={repo.error}
-        onLoadMore={repo.loadMore}
-        currentPage={repo.currentPage}
-        onErrorClear={() => repo.setError('')}
-      />
-    </div>
+        <MainContent
+          repositories={currentData}
+          loading={repo.loading}
+          error={repo.error}
+          onLoadMore={repo.loadMore}
+          currentPage={repo.currentPage}
+          onErrorClear={() => repo.setError('')}
+        />
+      </Box>
+    </ThemeProvider>
   );
 };
