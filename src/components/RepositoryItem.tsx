@@ -9,7 +9,6 @@ import {
   Stack,
   useTheme,
   Divider,
-  Grid,
 } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import ForkRightIcon from '@mui/icons-material/ForkRight';
@@ -121,10 +120,6 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                   label="Fork"
                   size="small"
                   variant="outlined"
-                  sx={{
-                    borderColor: theme.palette.info.main,
-                    color: theme.palette.info.main,
-                  }}
                 />
               )}
               {repo.archived && (
@@ -133,10 +128,6 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                   label="Archived"
                   size="small"
                   variant="outlined"
-                  sx={{
-                    borderColor: theme.palette.text.disabled,
-                    color: theme.palette.text.disabled,
-                  }}
                 />
               )}
               {repo.visibility && (
@@ -145,10 +136,6 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                   label={repo.visibility}
                   size="small"
                   variant="outlined"
-                  sx={{
-                    borderColor: repo.visibility === 'private' ? theme.palette.error.main : theme.palette.success.main,
-                    color: repo.visibility === 'private' ? theme.palette.error.main : theme.palette.success.main,
-                  }}
                 />
               )}
               {repo.language && (
@@ -163,10 +150,6 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                 label={repo.stars}
                 size="small"
                 variant="outlined"
-                sx={{
-                  borderColor: theme.palette.warning.main,
-                  color: theme.palette.warning.main,
-                }}
               />
               {repo.forks_count > 0 && (
                 <Chip
@@ -182,47 +165,16 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                   label={repo.open_issues_count}
                   size="small"
                   variant="outlined"
-                  sx={{
-                    borderColor: theme.palette.error.main,
-                    color: theme.palette.error.main,
-                  }}
                 />
               )}
             </Stack>
 
-            {(repo.pushed_at || repo.permissions) && (
+            {repo.pushed_at && (
               <>
                 <Divider sx={{ marginY: theme.spacing(1) }} />
-                <Grid container spacing={1}>
-                  {repo.pushed_at && (
-                    <Grid item xs={12} sm={6}>
-                      <Typography variant="caption" color="textSecondary">
-                        Pushed: {formatDate(repo.pushed_at)}
-                      </Typography>
-                    </Grid>
-                  )}
-                  {repo.permissions && (
-                    <Grid item xs={12} sm={6}>
-                      <Stack direction="row" spacing={0.5} flexWrap="wrap" gap={0.5}>
-                        {repo.permissions.admin && (
-                          <Chip label="Admin" size="small" sx={{ height: '20px', fontSize: '10px' }} />
-                        )}
-                        {repo.permissions.maintain && (
-                          <Chip label="Maintain" size="small" sx={{ height: '20px', fontSize: '10px' }} />
-                        )}
-                        {repo.permissions.push && (
-                          <Chip label="Push" size="small" sx={{ height: '20px', fontSize: '10px' }} />
-                        )}
-                        {repo.permissions.triage && (
-                          <Chip label="Triage" size="small" sx={{ height: '20px', fontSize: '10px' }} />
-                        )}
-                        {repo.permissions.pull && (
-                          <Chip label="Pull" size="small" sx={{ height: '20px', fontSize: '10px' }} />
-                        )}
-                      </Stack>
-                    </Grid>
-                  )}
-                </Grid>
+                <Typography variant="caption" color="textSecondary">
+                  Pushed: {formatDate(repo.pushed_at)}
+                </Typography>
               </>
             )}
           </Box>
