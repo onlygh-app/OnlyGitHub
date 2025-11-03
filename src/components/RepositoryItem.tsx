@@ -7,6 +7,7 @@ import {
   Typography,
   Chip,
   Stack,
+  useTheme,
 } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { Repository } from '../types';
@@ -18,17 +19,13 @@ interface RepositoryItemProps {
 }
 
 const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index }) => {
+  const theme = useTheme();
+
   return (
     <Card
       sx={{
         marginBottom: '10px',
-        background: '#161b22',
-        border: '1px solid #30363d',
-        transition: 'all 0.2s ease',
-        '&:hover': {
-          borderColor: '#58a6ff',
-          boxShadow: '0 4px 12px rgba(88, 166, 255, 0.15)',
-        },
+        transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
       <CardContent sx={{ padding: '12px 14px', '&:last-child': { paddingBottom: '12px' } }}>
@@ -39,15 +36,12 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                color: '#58a6ff',
-                textDecoration: 'none',
                 fontSize: '15px',
                 fontWeight: 600,
                 display: 'block',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
-                '&:hover': { textDecoration: 'underline' },
               }}
             >
               {repo.name}
@@ -56,13 +50,17 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
             <Typography
               variant="caption"
               sx={{
-                color: '#8b949e',
+                color: theme.palette.text.secondary,
                 marginTop: '2px',
                 display: 'block',
-                fontSize: '12px',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
+                fontFamily: '"SF Mono", "Segoe UI Mono", "Roboto Mono", "Monaco", "Courier New", monospace',
+                backgroundColor: 'rgba(88, 166, 255, 0.08)',
+                padding: '2px 6px',
+                borderRadius: '4px',
+                width: 'fit-content',
               }}
             >
               {repo.full_name}
@@ -72,14 +70,13 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
               <Typography
                 variant="caption"
                 sx={{
-                  color: '#e6edf3',
+                  color: theme.palette.text.primary,
                   marginTop: '4px',
                   lineHeight: 1.4,
                   display: '-webkit-box',
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
-                  fontSize: '12px',
                 }}
               >
                 {repo.description}
@@ -92,8 +89,6 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                 size="small"
                 variant="outlined"
                 sx={{
-                  borderColor: '#30363d',
-                  color: '#8b949e',
                   height: '20px',
                   fontSize: '11px',
                 }}
@@ -104,8 +99,6 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                   size="small"
                   variant="outlined"
                   sx={{
-                    borderColor: '#30363d',
-                    color: '#8b949e',
                     height: '20px',
                     fontSize: '11px',
                   }}
@@ -117,8 +110,8 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                 size="small"
                 variant="outlined"
                 sx={{
-                  borderColor: '#fb8500',
-                  color: '#fb8500',
+                  borderColor: theme.palette.warning.main,
+                  color: theme.palette.warning.main,
                   height: '20px',
                   fontSize: '11px',
                 }}
@@ -136,12 +129,12 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
               display: 'flex',
               alignItems: 'center',
               borderRadius: '50%',
-              border: '2px solid #30363d',
+              border: `2px solid ${theme.palette.divider}`,
               overflow: 'hidden',
-              transition: 'border-color 0.2s ease',
+              transition: 'border-color 150ms cubic-bezier(0.4, 0, 0.2, 1)',
               flexShrink: 0,
               '&:hover': {
-                borderColor: '#58a6ff',
+                borderColor: theme.palette.primary.main,
               },
             }}
           >

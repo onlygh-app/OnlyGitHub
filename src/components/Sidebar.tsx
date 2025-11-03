@@ -6,6 +6,7 @@ import {
   Divider,
   Stack,
   Paper,
+  useTheme,
 } from '@mui/material';
 import ExploreIcon from '@mui/icons-material/Explore';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -36,6 +37,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   onTogglePosition,
   onLogout,
 }) => {
+  const theme = useTheme();
   const handleNavClick = useCallback((page: PageType) => {
     onPageChange(page);
   }, [onPageChange]);
@@ -50,9 +52,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
           display: 'flex',
           flexDirection: 'column',
           order: position === 'right' ? 2 : 1,
-          background: '#161b22',
-          borderRight: position === 'left' ? '1px solid #30363d' : 'none',
-          borderLeft: position === 'right' ? '1px solid #30363d' : 'none',
+          background: theme.palette.background.paper,
+          borderRight: position === 'left' ? `1px solid ${theme.palette.divider}` : 'none',
+          borderLeft: position === 'right' ? `1px solid ${theme.palette.divider}` : 'none',
         }}
       >
         <Box sx={{ padding: '24px 16px' }}>
@@ -60,8 +62,10 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             variant="h6"
             component="h1"
             sx={{
-              color: '#58a6ff',
-              fontWeight: 700,
+              background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
               marginBottom: '8px',
             }}
           >
@@ -70,14 +74,14 @@ const SidebarComponent: React.FC<SidebarProps> = ({
           <Typography
             variant="body2"
             sx={{
-              color: '#8b949e',
+              color: theme.palette.text.secondary,
             }}
           >
             {pageTitle}
           </Typography>
         </Box>
 
-        <Divider sx={{ backgroundColor: '#30363d' }} />
+        <Divider />
 
         <Stack
           spacing={1}
@@ -93,12 +97,10 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             variant={currentPage === 'explore' ? 'contained' : 'text'}
             sx={{
               justifyContent: 'flex-start',
-              textTransform: 'none',
-              fontSize: '14px',
-              color: currentPage === 'explore' ? '#fff' : '#8b949e',
-              backgroundColor: currentPage === 'explore' ? '#58a6ff' : 'transparent',
+              backgroundColor: currentPage === 'explore' ? theme.palette.primary.main : 'transparent',
+              color: currentPage === 'explore' ? '#fff' : theme.palette.text.secondary,
               '&:hover': {
-                backgroundColor: currentPage === 'explore' ? '#58a6ff' : 'rgba(88, 166, 255, 0.1)',
+                backgroundColor: currentPage === 'explore' ? theme.palette.primary.main : 'rgba(88, 166, 255, 0.1)',
               },
             }}
             title="Explore repositories"
@@ -112,12 +114,10 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             variant={currentPage === 'trending' ? 'contained' : 'text'}
             sx={{
               justifyContent: 'flex-start',
-              textTransform: 'none',
-              fontSize: '14px',
-              color: currentPage === 'trending' ? '#fff' : '#8b949e',
-              backgroundColor: currentPage === 'trending' ? '#58a6ff' : 'transparent',
+              backgroundColor: currentPage === 'trending' ? theme.palette.primary.main : 'transparent',
+              color: currentPage === 'trending' ? '#fff' : theme.palette.text.secondary,
               '&:hover': {
-                backgroundColor: currentPage === 'trending' ? '#58a6ff' : 'rgba(88, 166, 255, 0.1)',
+                backgroundColor: currentPage === 'trending' ? theme.palette.primary.main : 'rgba(88, 166, 255, 0.1)',
               },
             }}
             title="View trending repositories"
@@ -126,7 +126,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
           </Button>
         </Stack>
 
-        <Divider sx={{ backgroundColor: '#30363d' }} />
+        <Divider />
 
         <Stack
           spacing={1}
@@ -141,9 +141,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             variant="text"
             sx={{
               justifyContent: 'flex-start',
-              textTransform: 'none',
-              fontSize: '14px',
-              color: '#8b949e',
+              color: theme.palette.text.secondary,
               '&:hover': {
                 backgroundColor: 'rgba(88, 166, 255, 0.1)',
               },
@@ -159,9 +157,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             variant="text"
             sx={{
               justifyContent: 'flex-start',
-              textTransform: 'none',
-              fontSize: '14px',
-              color: '#f85149',
+              color: theme.palette.error.main,
               '&:hover': {
                 backgroundColor: 'rgba(248, 81, 73, 0.1)',
               },
@@ -178,10 +174,10 @@ const SidebarComponent: React.FC<SidebarProps> = ({
         sx={{
           width: '4px',
           cursor: isResizing ? 'col-resize' : 'pointer',
-          backgroundColor: '#30363d',
-          transition: 'background-color 0.2s ease',
+          backgroundColor: theme.palette.divider,
+          transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1)',
           '&:hover': {
-            backgroundColor: '#58a6ff',
+            backgroundColor: theme.palette.primary.main,
           },
         }}
         role="separator"

@@ -4,6 +4,7 @@ import {
   CircularProgress,
   Typography,
   Container,
+  useTheme,
 } from '@mui/material';
 import { Repository } from '../types';
 import { RepositoryItem } from './RepositoryItem';
@@ -24,6 +25,7 @@ const RepositoryListComponent: React.FC<RepositoryListProps> = ({
   onLoadMore,
   onErrorClear,
 }) => {
+  const theme = useTheme();
   const contentRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = useCallback(() => {
@@ -52,7 +54,7 @@ const RepositoryListComponent: React.FC<RepositoryListProps> = ({
         flex: 1,
         overflowY: 'auto',
         padding: '16px 20px',
-        backgroundColor: 'var(--color-bg-primary, #0d1117)',
+        backgroundColor: theme.palette.background.default,
       }}
     >
       <ErrorMessage message={error} onClose={onErrorClear} />
@@ -63,7 +65,7 @@ const RepositoryListComponent: React.FC<RepositoryListProps> = ({
             <Typography
               variant="body2"
               sx={{
-                color: '#8b949e',
+                color: theme.palette.text.secondary,
               }}
             >
               No repositories found
@@ -77,12 +79,7 @@ const RepositoryListComponent: React.FC<RepositoryListProps> = ({
 
         {loading && repositories.length > 0 && (
           <Box sx={{ display: 'flex', justifyContent: 'center', paddingY: '16px' }}>
-            <CircularProgress
-              size={32}
-              sx={{
-                color: '#58a6ff',
-              }}
-            />
+            <CircularProgress size={32} />
           </Box>
         )}
       </Container>

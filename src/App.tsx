@@ -1,39 +1,8 @@
 import React, { useEffect, useCallback } from 'react';
-import { CssBaseline, Box, ThemeProvider, createTheme } from '@mui/material';
+import { CssBaseline, Box, ThemeProvider } from '@mui/material';
 import { LoginCard, Sidebar, MainContent } from './components';
 import { useAuth, useRepository, useSidebar } from './hooks';
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#58a6ff',
-    },
-    secondary: {
-      main: '#d2a8ff',
-    },
-    background: {
-      default: '#0d1117',
-      paper: '#161b22',
-    },
-    text: {
-      primary: '#e6edf3',
-      secondary: '#8b949e',
-    },
-    error: {
-      main: '#f85149',
-    },
-    warning: {
-      main: '#d29922',
-    },
-    success: {
-      main: '#3fb950',
-    },
-  },
-  typography: {
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
-  },
-});
+import darkTheme from './theme';
 
 export const App: React.FC = () => {
   const auth = useAuth();
@@ -90,7 +59,6 @@ export const App: React.FC = () => {
           flexDirection: sidebar.sidebarPosition === 'right' ? 'row-reverse' : 'row',
           width: '100%',
           height: '100%',
-          backgroundColor: '#0d1117',
         }}
       >
         <Sidebar

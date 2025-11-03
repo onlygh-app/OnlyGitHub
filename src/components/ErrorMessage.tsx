@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Alert, Box, IconButton } from '@mui/material';
+import { Alert, Box, IconButton, useTheme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface ErrorMessageProps {
@@ -13,6 +13,8 @@ const ErrorMessageComponent: React.FC<ErrorMessageProps> = ({
   onClose,
   variant = 'banner',
 }) => {
+  const theme = useTheme();
+
   if (!message) return null;
 
   return (
@@ -28,6 +30,15 @@ const ErrorMessageComponent: React.FC<ErrorMessageProps> = ({
             <CloseIcon fontSize="small" />
           </IconButton>
         }
+        sx={{
+          backgroundColor: 'rgba(248, 81, 73, 0.1)',
+          color: theme.palette.error.main,
+          border: `1px solid rgba(248, 81, 73, 0.2)`,
+          borderRadius: '4px',
+          '& .MuiAlert-icon': {
+            color: theme.palette.error.main,
+          },
+        }}
       >
         {message}
       </Alert>

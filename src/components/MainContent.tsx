@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { Repository } from '../types';
 import { RepositoryList } from './RepositoryList';
 import { WaterfallList } from './WaterfallList';
@@ -21,6 +21,8 @@ const MainContentComponent: React.FC<MainContentProps> = ({
   currentPage,
   onErrorClear,
 }) => {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -29,7 +31,7 @@ const MainContentComponent: React.FC<MainContentProps> = ({
         flexDirection: 'column',
         width: '100%',
         height: '100%',
-        backgroundColor: '#0d1117',
+        backgroundColor: theme.palette.background.default,
       }}
     >
       {currentPage === 'explore' ? (
