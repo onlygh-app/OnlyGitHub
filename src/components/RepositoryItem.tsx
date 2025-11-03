@@ -21,7 +21,7 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
   return (
     <Card
       sx={{
-        marginBottom: '12px',
+        marginBottom: '10px',
         background: '#161b22',
         border: '1px solid #30363d',
         transition: 'all 0.2s ease',
@@ -31,9 +31,9 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
         },
       }}
     >
-      <CardContent sx={{ padding: '16px', '&:last-child': { paddingBottom: '16px' } }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <Box sx={{ flex: 1 }}>
+      <CardContent sx={{ padding: '12px 14px', '&:last-child': { paddingBottom: '12px' } }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
             <Link
               href={repo.url}
               target="_blank"
@@ -41,8 +41,12 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
               sx={{
                 color: '#58a6ff',
                 textDecoration: 'none',
-                fontSize: '16px',
+                fontSize: '15px',
                 fontWeight: 600,
+                display: 'block',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
                 '&:hover': { textDecoration: 'underline' },
               }}
             >
@@ -50,10 +54,15 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
             </Link>
 
             <Typography
-              variant="body2"
+              variant="caption"
               sx={{
                 color: '#8b949e',
-                marginTop: '4px',
+                marginTop: '2px',
+                display: 'block',
+                fontSize: '12px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
               }}
             >
               {repo.full_name}
@@ -61,18 +70,23 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
 
             {repo.description && (
               <Typography
-                variant="body2"
+                variant="caption"
                 sx={{
                   color: '#e6edf3',
-                  marginTop: '8px',
-                  lineHeight: 1.5,
+                  marginTop: '4px',
+                  lineHeight: 1.4,
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  fontSize: '12px',
                 }}
               >
                 {repo.description}
               </Typography>
             )}
 
-            <Stack direction="row" spacing={1} sx={{ marginTop: '12px', flexWrap: 'wrap' }}>
+            <Stack direction="row" spacing={0.5} sx={{ marginTop: '6px', flexWrap: 'wrap', gap: '4px' }}>
               <Chip
                 label={`#${index + 1}`}
                 size="small"
@@ -80,6 +94,8 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                 sx={{
                   borderColor: '#30363d',
                   color: '#8b949e',
+                  height: '20px',
+                  fontSize: '11px',
                 }}
               />
               {repo.language && (
@@ -90,17 +106,21 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
                   sx={{
                     borderColor: '#30363d',
                     color: '#8b949e',
+                    height: '20px',
+                    fontSize: '11px',
                   }}
                 />
               )}
               <Chip
-                icon={<StarIcon />}
+                icon={<StarIcon sx={{ fontSize: '14px !important' }} />}
                 label={repo.stars}
                 size="small"
                 variant="outlined"
                 sx={{
                   borderColor: '#fb8500',
                   color: '#fb8500',
+                  height: '20px',
+                  fontSize: '11px',
                 }}
               />
             </Stack>
@@ -112,19 +132,20 @@ const RepositoryItemComponent: React.FC<RepositoryItemProps> = ({ repo, index })
             rel="noopener noreferrer"
             title={repo.owner.login}
             sx={{
-              marginLeft: '12px',
+              marginLeft: '8px',
               display: 'flex',
               alignItems: 'center',
               borderRadius: '50%',
               border: '2px solid #30363d',
               overflow: 'hidden',
               transition: 'border-color 0.2s ease',
+              flexShrink: 0,
               '&:hover': {
                 borderColor: '#58a6ff',
               },
             }}
           >
-            <LazyImage src={repo.owner.avatar_url} alt={repo.owner.login} width={48} height={48} />
+            <LazyImage src={repo.owner.avatar_url} alt={repo.owner.login} width={40} height={40} />
           </Link>
         </Box>
       </CardContent>

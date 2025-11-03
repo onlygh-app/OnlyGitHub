@@ -51,17 +51,17 @@ const RepositoryListComponent: React.FC<RepositoryListProps> = ({
       sx={{
         flex: 1,
         overflowY: 'auto',
-        padding: '24px',
+        padding: '16px 20px',
         backgroundColor: 'var(--color-bg-primary, #0d1117)',
       }}
     >
       <ErrorMessage message={error} onClose={onErrorClear} />
 
-      <Container maxWidth="md">
+      <Container maxWidth="md" sx={{ paddingX: 0 }}>
         {repositories.length === 0 && !loading && (
-          <Box sx={{ textAlign: 'center', paddingY: '48px' }}>
+          <Box sx={{ textAlign: 'center', paddingY: '40px' }}>
             <Typography
-              variant="h6"
+              variant="body2"
               sx={{
                 color: '#8b949e',
               }}
@@ -76,8 +76,9 @@ const RepositoryListComponent: React.FC<RepositoryListProps> = ({
         ))}
 
         {loading && repositories.length > 0 && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', paddingY: '24px' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', paddingY: '16px' }}>
             <CircularProgress
+              size={32}
               sx={{
                 color: '#58a6ff',
               }}
